@@ -41,8 +41,8 @@ int main(int argc, char **argv) {
     al_start_timer(timer);
 
     vector<engine::SnakePart> parts;
-    for(int i= 0; i < 10; i++) {
-        parts.push_back(engine::SnakePart(840 - (10 * i), 525));
+    for(int i= 0; i < 20; i++) {
+        parts.push_back(engine::SnakePart(840 - (20 * i), 525, (i == 0)));
     }
 
     do {
@@ -57,25 +57,21 @@ int main(int argc, char **argv) {
             case ALLEGRO_EVENT_KEY_DOWN:
                 if (ev.keyboard.keycode == ALLEGRO_KEY_W) {
                     auto top= parts.begin();
-                    top->changeDirection(engine::SnakePart::Direction::UP);
                     for(auto &part: parts) {
                         part.addPivot(top->getXPos(), top->getYPos(), engine::SnakePart::Direction::UP);
                     }
                 } else if (ev.keyboard.keycode == ALLEGRO_KEY_A) {
                     auto top= parts.begin();
-                    top->changeDirection(engine::SnakePart::Direction::LEFT);
                     for(auto &part: parts) {
                         part.addPivot(top->getXPos(), top->getYPos(), engine::SnakePart::Direction::LEFT);
                     }
                 } else if (ev.keyboard.keycode == ALLEGRO_KEY_S) {
                     auto top= parts.begin();
-                    top->changeDirection(engine::SnakePart::Direction::DOWN);
                     for(auto &part: parts) {
                         part.addPivot(top->getXPos(), top->getYPos(), engine::SnakePart::Direction::DOWN);
                     }
                 } else if (ev.keyboard.keycode == ALLEGRO_KEY_D) {
                     auto top= parts.begin();
-                    top->changeDirection(engine::SnakePart::Direction::RIGHT);
                     for(auto &part: parts) {
                         part.addPivot(top->getXPos(), top->getYPos(), engine::SnakePart::Direction::RIGHT);
                     }

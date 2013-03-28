@@ -12,11 +12,16 @@ using std::exception;
 using std::get;
 using std::make_tuple;
 
-SnakePart::SnakePart(double x, double y) : Object(x, y), speed(100), currDir(Direction::RIGHT) {
+SnakePart::SnakePart(double x, double y) : SnakePart(x, y, false) {
+}
+
+SnakePart::SnakePart(double x, double y, bool head) : Object(x, y), head(head), speed(100), currDir(Direction::RIGHT) {
 }
 
 SnakePart& SnakePart::addPivot(int x, int y, Direction dir) {
-    pivotPoints.push_back(make_tuple(x, y, dir));
+
+        pivotPoints.push_back(make_tuple(x, y, dir));
+    
     return *this;
 }
 
@@ -45,16 +50,60 @@ void SnakePart::tick(double deltaTime) {
     
     try {
         auto top= pivotPoints.at(0);
-        if (get<0>(top) == int(x) && get<1>(top) == int(y)) {
-            currDir= get<2>(top);
-            pivotPoints.erase(pivotPoints.begin());
+        switch(currDir) {
+            case Direction::UP:
+                if (int(y) <= get<1>(top)) {
+                    y= get<1>(top);
+                    currDir= get<2>(top);
+                    pivotPoints.erase(pivotPoints.begin());
+                }
+                break;
+            case Direction::RIGHT:
+               if (int(x) >= get<0>(top)) {
+                    x= get<0>(top);
+                    currDir= get<2>(top);
+                    pivotPoints.erase(pivotPoints.begin());
+                }
+               break;
+            case Direction::DOWN:
+                if (int(y) >= get<1>(top)) {
+                    y= get<1>(top);
+                    currDir= get<2>(top);
+                    pivotPoints.erase(pivotPoints.begin());
+                }
+                break;
+            case Direction::LEFT:
+                if (int(x) <= get<0>(top)) {
+                    x= get<0>(top);
+                    currDir= get<2>(top);
+                    pivotPoints.erase(pivotPoints.begin());
+                }
+                break;
         }
     } catch (exception &ex) {
     }
 }
 
 void SnakePart::draw() const {
-    al_draw_filled_rectangle(x - 10, y - 10, x + 10, y + 10, al_map_rgb(255, 0, 0));
+    try {
+        auto top= pivotPoints.at(0);
+        switch(currDir) {
+            case Direction::UP:
+                al_draw_filled_rectangle(x - 10, y - (10 + (y - get<1>(top))), x + 10, y + 10, al_map_rgb(255, 0, 0));
+                break;
+            case Direction::RIGHT:
+                al_draw_filled_rectangle(x - 10, y - 10, x + 10 + (get<0>(top) - x), y + 10, al_map_rgb(255, 0, 0));
+                break;
+            case Direction::DOWN:
+                al_draw_filled_rectangle(x - 10, y - 10, x + 10, y + 10 + (get<1>(top) - y), al_map_rgb(255, 0, 0));
+                break;
+            case Direction::LEFT:
+                al_draw_filled_rectangle(x - (10 + (x - get<0>(top))), y - 10, x + 10, y + 10, al_map_rgb(255, 0, 0));
+            break;
+        }
+    } catch (exception &ex) {
+        al_draw_filled_rectangle(x - 10, y - 10, x + 10, y + 10, al_map_rgb(255, 0, 0));
+    }
 }
 
 }

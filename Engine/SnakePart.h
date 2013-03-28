@@ -23,6 +23,7 @@ public:
     };
 
     SnakePart(double x, double y);
+    SnakePart(double x, double y, bool head);
 
     SnakePart& addPivot(int x, int y, Direction dir);
     SnakePart& changeDirection(Direction newDir);
@@ -31,6 +32,7 @@ public:
     virtual void draw() const;
 
 private:
+    bool head;
     double speed;
     Direction currDir;
     vector<tuple<int, int, Direction> > pivotPoints;
