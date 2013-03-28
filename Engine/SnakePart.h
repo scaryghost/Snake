@@ -25,6 +25,7 @@ public:
     SnakePart(double x, double y);
 
     SnakePart& addPivot(int x, int y, Direction dir);
+    SnakePart& changeDirection(Direction newDir);
 
     virtual void tick(double deltaTime);
     virtual void draw() const;
